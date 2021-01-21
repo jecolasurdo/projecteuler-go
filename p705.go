@@ -46,7 +46,19 @@ func InversionCount(s string) int {
 // sequence is obtained.  For example, the sequence 332 has 8 divided
 // sequences: {332, 331, 312, 311, 132, 131, 112, 111}.
 func DividedSequence(s string) []string {
-	return nil
+	sequence := []string{s}
+	for i := 0; i < len(s); i++ {
+		newSequence := []string{}
+		for _, item := range sequence {
+			if i == len(s) {
+				newSequence = append(newSequence, item[:i]+"1")
+			} else {
+				newSequence = append(newSequence, item[:i]+"1"+item[i+1:])
+			}
+		}
+		sequence = append(sequence, newSequence...)
+	}
+	return sequence
 }
 
 // PrimeConcat calculates to be the concatenation of all primes less than n,
