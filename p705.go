@@ -1,5 +1,7 @@
 package projecteuler
 
+import "strings"
+
 // InversionCountSum calculates the sum of the inversion count for all possible
 // divided sequences from the master sequence PrimeConcat(N), and returns the
 // result module 10e9+7 Example: F(20) = 3312 and F(50) = 338079744. (where F
@@ -20,7 +22,23 @@ func InversionCountSum(n int) int {
 // must be swapped to sort the sequence.  For example, 34214 has inversion
 // count of 5: 34214 -> 32414 -> 23414 -> 23144 -> 21344 -> 12344.
 func InversionCount(s string) int {
-	return 0
+	ss := strings.Split(s, "")
+	n := len(ss)
+	swaps := 0
+	for {
+		swapped := false
+		for i := 1; i < n-1; i++ {
+			if ss[i-1] > ss[i] {
+				ss[i-1], ss[i] = ss[i], ss[i-1]
+				swaps++
+				swapped = true
+			}
+		}
+		if swapped == false {
+			break
+		}
+	}
+	return swaps
 }
 
 // DividedSequence generates a divided sequence.
