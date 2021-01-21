@@ -19,3 +19,9 @@ func Test_DividedSequence(t *testing.T) {
 	expected := []string{"332", "331", "312", "311", "132", "131", "112", "111"}
 	assert.ElementsMatch(t, expected, result)
 }
+
+func Test_PrimeConcat(t *testing.T) {
+	result := projecteuler.PrimeConcat(20)
+	expected := "235711131719"
+	assert.Equal(t, expected, result)
+}

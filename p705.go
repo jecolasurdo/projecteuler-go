@@ -1,6 +1,10 @@
 package projecteuler
 
-import "strings"
+import (
+	"math"
+	"strconv"
+	"strings"
+)
 
 // InversionCountSum calculates the sum of the inversion count for all possible
 // divided sequences from the master sequence PrimeConcat(N), and returns the
@@ -61,8 +65,29 @@ func DividedSequence(s string) []string {
 	return sequence
 }
 
-// PrimeConcat calculates to be the concatenation of all primes less than n,
-// ignoring any zero digit.  For example, PrimeConcat(20) = 235711131719.
-func PrimeConcat(n int) string {
-	return ""
+// PrimeConcat calculates the concatenation of all primes less than n, ignoring
+// any zero digit.  For example, PrimeConcat(20) = 235711131719.
+func PrimeConcat(m int) string {
+	s := ""
+	for n := 1; n < m; n++ {
+		if isPrime(n) {
+			s = s + strconv.Itoa(n)
+		}
+	}
+	return s
+}
+
+func isPrime(n int) bool {
+	if n <= 3 {
+		return n > 1
+	}
+	if n%2 == 0 || n%3 == 0 {
+		return false
+	}
+	for i := 5; math.Pow(float64(i), 2.) <= float64(n); i += 6 {
+		if n%i == 0 || n%(i+2) == 0 {
+			return false
+		}
+	}
+	return true
 }
