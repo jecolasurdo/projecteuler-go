@@ -32,12 +32,19 @@ func InversionCountSum(n int) int {
 	return s % (1_000_000_007)
 }
 
+// ss is a central allocation for the InversionCount sequence.
+// since InversionCount is not concurrent, there's no need to allocate
+// a new slice for every call. It can just be reused.
+var ss = []byte{}
+
 // InversionCount calculates the inversion count for a sequence.  The inversion
 // count of a sequence of digits is the smallest number of adjacent pairs that
 // must be swapped to sort the sequence.  For example, 34214 has inversion
 // count of 5: 34214 -> 32414 -> 23414 -> 23144 -> 21344 -> 12344.
 func InversionCount(sequence []byte) int {
-	ss := make([]byte, len(sequence))
+	if len(ss) != len(sequence) {
+		ss = make([]byte, len(sequence))
+	}
 	copy(ss, sequence)
 
 	n := len(ss)
