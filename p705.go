@@ -28,11 +28,7 @@ import (
 //		efficient for the operation in general.
 func InversionCountSum(n int) int {
 	primes := PrimeConcat(n)
-	sequences := DividedSequence(primes)
-	s := 0
-	for seq := range sequences {
-		s += InversionCount(seq)
-	}
+	s := DividedSequence(primes, InversionCount)
 	return s % (1_000_000_007)
 }
 
@@ -40,7 +36,10 @@ func InversionCountSum(n int) int {
 // count of a sequence of digits is the smallest number of adjacent pairs that
 // must be swapped to sort the sequence.  For example, 34214 has inversion
 // count of 5: 34214 -> 32414 -> 23414 -> 23144 -> 21344 -> 12344.
-func InversionCount(ss []byte) int {
+func InversionCount(sequence []byte) int {
+	ss := make([]byte, len(sequence))
+	copy(ss, sequence)
+
 	n := len(ss)
 	swaps := 0
 	for {
@@ -80,32 +79,26 @@ var divisors = map[byte][]byte{
 //
 // Note that the example (332...) above is kindof lacking. A better example is
 // 432, which has 12 divided sequences (results shown in Test_DividedSequence).
-func DividedSequence(s string) chan []byte {
-	sequenceSource := make(chan []byte, 10)
-	go func() {
-		defer close(sequenceSource)
-		sequence := make([]byte, len(s))
-		for i := 0; i < len(sequence); i++ {
-			sequence[i] = '1'
-		}
-		initialSequence := make([]byte, len(sequence))
-		copy(initialSequence, sequence)
-		sequenceSource <- initialSequence
+func DividedSequence(s string, inversionCounter func([]byte) int) int {
+	sequence := make([]byte, len(s))
+	for i := 0; i < len(sequence); i++ {
+		sequence[i] = '1'
+	}
 
-		for i := len(sequence) - 1; i >= 0; {
-			newSequence := make([]byte, len(sequence))
-			incValue, carry := increment(sequence[i], s[i])
-			sequence[i] = incValue
-			if carry {
-				i--
-			} else {
-				copy(newSequence, sequence)
-				sequenceSource <- newSequence
-				i = len(sequence) - 1
-			}
+	// note, we're skipping a call to inversionCounter for the base value
+	// of '111...111' since we know there are no inversions for that position.
+	inversionCountTotal := 0
+	for i := len(sequence) - 1; i >= 0; {
+		incValue, carry := increment(sequence[i], s[i])
+		sequence[i] = incValue
+		if carry {
+			i--
+		} else {
+			inversionCountTotal += inversionCounter(sequence)
+			i = len(sequence) - 1
 		}
-	}()
-	return sequenceSource
+	}
+	return inversionCountTotal
 }
 
 // increment returns the next value and a bool representing whether or not a
