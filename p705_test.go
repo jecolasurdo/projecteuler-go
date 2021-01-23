@@ -2,11 +2,18 @@ package projecteuler_test
 
 import (
 	"fmt"
+	"strconv"
 	"testing"
 
 	"github.com/jecolasurdo/projecteuler"
 	"github.com/stretchr/testify/assert"
 )
+
+func Test_InversionCountSumFinal(t *testing.T) {
+	t.Skip()
+	result := projecteuler.InversionCountSum(10e8)
+	assert.Equal(t, 480440153, result)
+}
 
 func Test_InversionCountSum(t *testing.T) {
 	testCases := []int{20, 3312, 50, 338079744}
@@ -22,14 +29,15 @@ func Test_InversionCountSum(t *testing.T) {
 }
 
 func Test_InversionCount(t *testing.T) {
-	result := projecteuler.InversionCount("34214")
-	if result != 5 {
-		t.Errorf("Expected 5, got %v", result)
-	}
+	testCases := []int{34214, 5, 21111, 4}
 
-	result = projecteuler.InversionCount("21111")
-	if result != 4 {
-		t.Errorf("Expected 4, got %v", result)
+	for i := 0; i < len(testCases); i += 2 {
+		n := testCases[i]
+		e := testCases[i+1]
+		t.Run(fmt.Sprintf("test %v", n), func(t *testing.T) {
+			r := projecteuler.InversionCount(strconv.Itoa(n))
+			assert.Equal(t, e, r)
+		})
 	}
 }
 
@@ -46,4 +54,16 @@ func Test_PrimeConcat(t *testing.T) {
 	result := projecteuler.PrimeConcat(20)
 	expected := "235711131719"
 	assert.Equal(t, expected, result)
+}
+
+func Benchmark_InversionCountSum(b *testing.B) {
+	scales := []int{5, 10, 20, 30, 40}
+	for _, scale := range scales {
+		b.Run(fmt.Sprintf("%v", scale), func(b *testing.B) {
+			for n := 1; n <= b.N; n++ {
+				result := projecteuler.InversionCountSum(scale)
+				_ = result
+			}
+		})
+	}
 }

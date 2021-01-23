@@ -21,14 +21,6 @@ func InversionCountSum(n int) int {
 	return s % (1_000_000_007)
 }
 
-func mustAtoi(s string) int {
-	i, err := strconv.Atoi(s)
-	if err != nil {
-		panic(err)
-	}
-	return i
-}
-
 // InversionCount calculates the inversion count for a sequence.  The inversion
 // count of a sequence of digits is the smallest number of adjacent pairs that
 // must be swapped to sort the sequence.  For example, 34214 has inversion
@@ -40,7 +32,9 @@ func InversionCount(s string) int {
 	for {
 		swapped := false
 		for i := 1; i < n; i++ {
-			if mustAtoi(ss[i-1]) > mustAtoi(ss[i]) {
+			// we can get away with comparing the bytes since we're only
+			// comparing chars [0-9]
+			if ss[i-1] > ss[i] {
 				ss[i-1], ss[i] = ss[i], ss[i-1]
 				swaps++
 				swapped = true
@@ -68,6 +62,9 @@ var replacements = map[byte][]string{
 // If each digit of a sequence is replaced by one of its divisors a divided
 // sequence is obtained.  For example, the sequence 332 has 8 divided
 // sequences: {332, 331, 312, 311, 132, 131, 112, 111}.
+//
+// Note that the example (332...) above is kindof lacking. A better example is
+// 432, which has 12 divided sequences (results shown in Test_DividedSequence).
 func DividedSequence(s string) []string {
 	sequence := []string{s}
 	distinct := map[string]struct{}{}
