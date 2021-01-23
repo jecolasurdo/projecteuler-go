@@ -1,6 +1,7 @@
 package projecteuler_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/jecolasurdo/projecteuler"
@@ -8,13 +9,16 @@ import (
 )
 
 func Test_InversionCountSum(t *testing.T) {
-	result := projecteuler.InversionCountSum(20)
-	expected := 3312
-	assert.Equal(t, expected, result)
+	testCases := []int{20, 3312, 50, 338079744}
 
-	result = projecteuler.InversionCountSum(50)
-	expected = 338079744
-	assert.Equal(t, expected, result)
+	for i := 0; i < len(testCases); i += 2 {
+		n := testCases[i]
+		e := testCases[i+1]
+		t.Run(fmt.Sprintf("test %v", n), func(t *testing.T) {
+			r := projecteuler.InversionCountSum(n)
+			assert.Equal(t, e, r)
+		})
+	}
 }
 
 func Test_InversionCount(t *testing.T) {
