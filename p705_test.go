@@ -8,8 +8,12 @@ import (
 )
 
 func Test_InversionCountSum(t *testing.T) {
-	result := projecteuler.InversionCountSum(10e8)
+	result := projecteuler.InversionCountSum(20)
 	expected := 3312
+	assert.Equal(t, expected, result)
+
+	result = projecteuler.InversionCountSum(50)
+	expected = 338079744
 	assert.Equal(t, expected, result)
 }
 
@@ -18,11 +22,19 @@ func Test_InversionCount(t *testing.T) {
 	if result != 5 {
 		t.Errorf("Expected 5, got %v", result)
 	}
+
+	result = projecteuler.InversionCount("21111")
+	if result != 4 {
+		t.Errorf("Expected 4, got %v", result)
+	}
 }
 
 func Test_DividedSequence(t *testing.T) {
-	result := projecteuler.DividedSequence("332")
-	expected := []string{"332", "331", "312", "311", "132", "131", "112", "111"}
+	result := projecteuler.DividedSequence("432")
+	expected := []string{
+		"432", "431", "412", "411",
+		"232", "231", "212", "211",
+		"132", "131", "112", "111"}
 	assert.ElementsMatch(t, expected, result)
 }
 

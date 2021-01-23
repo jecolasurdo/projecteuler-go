@@ -18,7 +18,15 @@ func InversionCountSum(n int) int {
 	for _, seq := range sequences {
 		s += InversionCount(seq)
 	}
-	return s % (10e8 + 7)
+	return s % (1_000_000_007)
+}
+
+func mustAtoi(s string) int {
+	i, err := strconv.Atoi(s)
+	if err != nil {
+		panic(err)
+	}
+	return i
 }
 
 // InversionCount calculates the inversion count for a sequence.  The inversion
@@ -31,8 +39,8 @@ func InversionCount(s string) int {
 	swaps := 0
 	for {
 		swapped := false
-		for i := 1; i < n-1; i++ {
-			if ss[i-1] > ss[i] {
+		for i := 1; i < n; i++ {
+			if mustAtoi(ss[i-1]) > mustAtoi(ss[i]) {
 				ss[i-1], ss[i] = ss[i], ss[i-1]
 				swaps++
 				swapped = true
@@ -45,6 +53,17 @@ func InversionCount(s string) int {
 	return swaps
 }
 
+var replacements = map[byte][]string{
+	'9': {"3", "1"},
+	'8': {"4", "2", "1"},
+	'7': {"1"},
+	'6': {"3", "2", "1'"},
+	'5': {"1"},
+	'4': {"2", "1"},
+	'3': {"1"},
+	'2': {"1"},
+}
+
 // DividedSequence generates a divided sequence.
 // If each digit of a sequence is replaced by one of its divisors a divided
 // sequence is obtained.  For example, the sequence 332 has 8 divided
@@ -55,13 +74,20 @@ func DividedSequence(s string) []string {
 	for i := 0; i < len(s); i++ {
 		newSequence := []string{}
 		for _, item := range sequence {
-			newItem := item[:i] + "1"
-			if i < len(s) {
-				newItem = item[:i] + "1" + item[i+1:]
+			var rr []string
+			var exists bool
+			if rr, exists = replacements[item[i]]; !exists {
+				continue
 			}
-			if _, seenBefore := distinct[newItem]; !seenBefore {
-				newSequence = append(newSequence, newItem)
-				distinct[newItem] = struct{}{}
+			for _, r := range rr {
+				newItem := item[:i] + r
+				if i < len(s) {
+					newItem = item[:i] + r + item[i+1:]
+				}
+				if _, seenBefore := distinct[newItem]; !seenBefore {
+					newSequence = append(newSequence, newItem)
+					distinct[newItem] = struct{}{}
+				}
 			}
 		}
 		sequence = append(sequence, newSequence...)
