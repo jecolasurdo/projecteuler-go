@@ -30,8 +30,8 @@ func InversionCountSum(n int) int {
 	primes := PrimeConcat(n)
 	sequences := DividedSequence(primes)
 	s := 0
-	for _, seq := range sequences {
-		s += InversionCount([]byte(seq))
+	for seq := range sequences {
+		s += InversionCount(seq)
 	}
 	return s % (1_000_000_007)
 }
@@ -61,15 +61,16 @@ func InversionCount(ss []byte) int {
 	return swaps
 }
 
-var replacements = map[byte][]string{
-	'9': {"3", "1"},
-	'8': {"4", "2", "1"},
-	'7': {"1"},
-	'6': {"3", "2", "1'"},
-	'5': {"1"},
-	'4': {"2", "1"},
-	'3': {"1"},
-	'2': {"1"},
+var divisors = map[byte][]byte{
+	'9': {'1', '3', '9'},
+	'8': {'1', '2', '4', '8'},
+	'7': {'1', '7'},
+	'6': {'1', '2', '3', '6'},
+	'5': {'1', '5'},
+	'4': {'1', '2', '4'},
+	'3': {'1', '3'},
+	'2': {'1', '2'},
+	'1': {'1'},
 }
 
 // DividedSequence generates a divided sequence.
@@ -79,27 +80,47 @@ var replacements = map[byte][]string{
 //
 // Note that the example (332...) above is kindof lacking. A better example is
 // 432, which has 12 divided sequences (results shown in Test_DividedSequence).
-func DividedSequence(s string) []string {
-	sequence := []string{s}
-	for i := 0; i < len(s); i++ {
-		newSequence := []string{}
-		for _, item := range sequence {
-			var rr []string
-			var exists bool
-			if rr, exists = replacements[item[i]]; !exists {
-				continue
-			}
-			for _, r := range rr {
-				newItem := item[:i] + r
-				if i < len(s) {
-					newItem = item[:i] + r + item[i+1:]
-				}
-				newSequence = append(newSequence, newItem)
+func DividedSequence(s string) chan []byte {
+	sequenceSource := make(chan []byte, 10)
+	go func() {
+		defer close(sequenceSource)
+		sequence := make([]byte, len(s))
+		for i := 0; i < len(sequence); i++ {
+			sequence[i] = '1'
+		}
+		initialSequence := make([]byte, len(sequence))
+		copy(initialSequence, sequence)
+		sequenceSource <- initialSequence
+
+		for i := len(sequence) - 1; i >= 0; {
+			newSequence := make([]byte, len(sequence))
+			incValue, carry := increment(sequence[i], s[i])
+			sequence[i] = incValue
+			if carry {
+				i--
+			} else {
+				copy(newSequence, sequence)
+				sequenceSource <- newSequence
+				i = len(sequence) - 1
 			}
 		}
-		sequence = append(sequence, newSequence...)
+	}()
+	return sequenceSource
+}
+
+// increment returns the next value and a bool representing whether or not a
+// carry occured
+func increment(digit, base byte) (byte, bool) {
+	divs := divisors[base]
+	for i := 0; i < len(divs); i++ {
+		if divs[i] == digit {
+			if i == len(divs)-1 {
+				return divs[0], true
+			}
+			return divs[i+1], false
+		}
 	}
-	return sequence
+	panic("digit not found for base")
 }
 
 // PrimeConcat calculates the concatenation of all primes less than n, ignoring
