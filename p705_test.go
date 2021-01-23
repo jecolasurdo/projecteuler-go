@@ -7,6 +7,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func Test_InversionCountSum(t *testing.T) {
+	result := projecteuler.InversionCountSum(10e8)
+	expected := 3312
+	assert.Equal(t, expected, result)
+}
+
 func Test_InversionCount(t *testing.T) {
 	result := projecteuler.InversionCount("34214")
 	if result != 5 {

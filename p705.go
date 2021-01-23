@@ -8,7 +8,7 @@ import (
 
 // InversionCountSum calculates the sum of the inversion count for all possible
 // divided sequences from the master sequence PrimeConcat(N), and returns the
-// result module 10e9+7 Example: F(20) = 3312 and F(50) = 338079744. (where F
+// result module 10e8+7 Example: F(20) = 3312 and F(50) = 338079744. (where F
 // is InversionCountSum)
 // https://projecteuler.net/problem=705
 func InversionCountSum(n int) int {
@@ -18,7 +18,7 @@ func InversionCountSum(n int) int {
 	for _, seq := range sequences {
 		s += InversionCount(seq)
 	}
-	return s%10e9 + 7
+	return s % (10e8 + 7)
 }
 
 // InversionCount calculates the inversion count for a sequence.  The inversion
@@ -51,13 +51,17 @@ func InversionCount(s string) int {
 // sequences: {332, 331, 312, 311, 132, 131, 112, 111}.
 func DividedSequence(s string) []string {
 	sequence := []string{s}
+	distinct := map[string]struct{}{}
 	for i := 0; i < len(s); i++ {
 		newSequence := []string{}
 		for _, item := range sequence {
-			if i == len(s) {
-				newSequence = append(newSequence, item[:i]+"1")
-			} else {
-				newSequence = append(newSequence, item[:i]+"1"+item[i+1:])
+			newItem := item[:i] + "1"
+			if i < len(s) {
+				newItem = item[:i] + "1" + item[i+1:]
+			}
+			if _, seenBefore := distinct[newItem]; !seenBefore {
+				newSequence = append(newSequence, newItem)
+				distinct[newItem] = struct{}{}
 			}
 		}
 		sequence = append(sequence, newSequence...)
