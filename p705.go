@@ -3,7 +3,6 @@ package projecteuler
 import (
 	"math"
 	"strconv"
-	"strings"
 )
 
 // InversionCountSum calculates the sum of the inversion count for all possible
@@ -32,7 +31,7 @@ func InversionCountSum(n int) int {
 	sequences := DividedSequence(primes)
 	s := 0
 	for _, seq := range sequences {
-		s += InversionCount(seq)
+		s += InversionCount([]byte(seq))
 	}
 	return s % (1_000_000_007)
 }
@@ -41,8 +40,7 @@ func InversionCountSum(n int) int {
 // count of a sequence of digits is the smallest number of adjacent pairs that
 // must be swapped to sort the sequence.  For example, 34214 has inversion
 // count of 5: 34214 -> 32414 -> 23414 -> 23144 -> 21344 -> 12344.
-func InversionCount(s string) int {
-	ss := strings.Split(s, "")
+func InversionCount(ss []byte) int {
 	n := len(ss)
 	swaps := 0
 	for {

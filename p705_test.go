@@ -35,7 +35,7 @@ func Test_InversionCount(t *testing.T) {
 		n := testCases[i]
 		e := testCases[i+1]
 		t.Run(fmt.Sprintf("test %v", n), func(t *testing.T) {
-			r := projecteuler.InversionCount(strconv.Itoa(n))
+			r := projecteuler.InversionCount([]byte(strconv.Itoa(n)))
 			assert.Equal(t, e, r)
 		})
 	}
