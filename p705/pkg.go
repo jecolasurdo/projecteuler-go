@@ -4,6 +4,7 @@ package p705
 
 import (
 	"math"
+	"strconv"
 )
 
 // InversionCountSum calculates the sum of the inversion count for all possible
@@ -113,7 +114,7 @@ func PrimeConcat(m int) string {
 	s := ""
 	for n := 1; n < m; n++ {
 		if isPrime(n) {
-			_ = n
+			// _ = n
 			// main questions:
 			//  how many primes are there below 10e8?
 			//		~5761455
@@ -124,7 +125,7 @@ func PrimeConcat(m int) string {
 			// how long to calculate them?
 			//		~15 minutes?
 			// _ = strconv.Itoa(n)
-			// s = s + strconv.Itoa(n)
+			s = s + strconv.Itoa(n)
 		}
 	}
 	return s
