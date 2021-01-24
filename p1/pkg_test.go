@@ -1,16 +1,16 @@
-package projecteuler_test
+package p1_test
 
 import (
 	"strconv"
 	"testing"
 
-	"github.com/jecolasurdo/projecteuler"
+	"github.com/jecolasurdo/projecteuler/p1"
 )
 
 func Test_FindSumOfMultiples(t *testing.T) {
 	suts := []func([]int, int) int{
-		projecteuler.FindSumOfMultiples,
-		projecteuler.FindSumOfMultiplesBruteForce,
+		p1.FindSumOfMultiples,
+		p1.FindSumOfMultiplesBruteForce,
 	}
 
 	testCases := []struct {
@@ -49,7 +49,7 @@ func Benchmark_FindSumOfMultiplesBruteForce(b *testing.B) {
 	sumBelow := 1000
 
 	for n := 0; n < b.N; n++ {
-		projecteuler.FindSumOfMultiplesBruteForce(baseFactors, sumBelow)
+		p1.FindSumOfMultiplesBruteForce(baseFactors, sumBelow)
 	}
 }
 
@@ -58,6 +58,6 @@ func Benchmark_FindSumOfMultiples(b *testing.B) {
 	sumBelow := 1000
 
 	for n := 0; n < b.N; n++ {
-		projecteuler.FindSumOfMultiples(baseFactors, sumBelow)
+		p1.FindSumOfMultiples(baseFactors, sumBelow)
 	}
 }

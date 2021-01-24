@@ -1,17 +1,17 @@
-package projecteuler_test
+package p705_test
 
 import (
 	"fmt"
 	"strconv"
 	"testing"
 
-	"github.com/jecolasurdo/projecteuler"
+	"github.com/jecolasurdo/projecteuler/p705"
 	"github.com/stretchr/testify/assert"
 )
 
 func Test_InversionCountSumFinal(t *testing.T) {
 	t.Skip()
-	result := projecteuler.InversionCountSum(10e8)
+	result := p705.InversionCountSum(10e8)
 	assert.Equal(t, 480440153, result)
 }
 
@@ -23,7 +23,7 @@ func Test_InversionCountSum(t *testing.T) {
 		n := testCases[i]
 		e := testCases[i+1]
 		t.Run(fmt.Sprintf("test %v", n), func(t *testing.T) {
-			r := projecteuler.InversionCountSum(n)
+			r := p705.InversionCountSum(n)
 			assert.Equal(t, e, r)
 		})
 	}
@@ -36,14 +36,14 @@ func Test_InversionCount(t *testing.T) {
 		n := testCases[i]
 		e := testCases[i+1]
 		t.Run(fmt.Sprintf("test %v", n), func(t *testing.T) {
-			r := projecteuler.InversionCount([]byte(strconv.Itoa(n)))
+			r := p705.InversionCount([]byte(strconv.Itoa(n)))
 			assert.Equal(t, e, r)
 		})
 	}
 }
 
 // func Test_DividedSequence(t *testing.T) {
-// 	actual := projecteuler.DividedSequence("432")
+// 	actual := p705.DividedSequence("432")
 // 	expected := []string{
 // 		"432", "431", "412", "411",
 // 		"232", "231", "212", "211",
@@ -52,7 +52,7 @@ func Test_InversionCount(t *testing.T) {
 // }
 
 func Test_PrimeConcat(t *testing.T) {
-	result := projecteuler.PrimeConcat(20)
+	result := p705.PrimeConcat(20)
 	expected := "235711131719"
 	assert.Equal(t, expected, result)
 }
@@ -62,7 +62,19 @@ func Benchmark_InversionCountSum(b *testing.B) {
 	for _, scale := range scales {
 		b.Run(fmt.Sprintf("%v", scale), func(b *testing.B) {
 			for n := 1; n <= b.N; n++ {
-				result := projecteuler.InversionCountSum(scale)
+				result := p705.InversionCountSum(scale)
+				_ = result
+			}
+		})
+	}
+}
+
+func Benchmark_PrimeConcat(b *testing.B) {
+	scales := []int{10e1, 10e2, 10e3, 10e4}
+	for _, scale := range scales {
+		b.Run(fmt.Sprintf("%v", scale), func(b *testing.B) {
+			for n := 1; n <= b.N; n++ {
+				result := p705.PrimeConcat(scale)
 				_ = result
 			}
 		})

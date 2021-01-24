@@ -1,31 +1,15 @@
-package projecteuler
+// Package p705 addresses problem 705.
+// https://projecteuler.net/problem=705
+package p705
 
 import (
 	"math"
-	"strconv"
 )
 
 // InversionCountSum calculates the sum of the inversion count for all possible
 // divided sequences from the master sequence PrimeConcat(N), and returns the
 // result module 10e8+7 Example: F(20) = 3312 and F(50) = 338079744. (where F
 // is InversionCountSum)
-// https://projecteuler.net/problem=705
-//
-// Areas to improve performance:
-//	- InversionCount uses can use a more optimized bubble sort implementation
-//  - InversionCount for each sequence can be calculated in parallel
-//  - InversionCount can be initialized as soon as a unique sequence is found.
-//		This might not really gain very much though.
-//	- PrimeConcat can be calculated once and cached on disk between runs.
-//	- Can probably look for areas to reduce heap usage
-//	- Once an inversionCount for a sequence is calculated, it's not necessary
-//		to store that sequence in memory any longer. The only need to keep
-//		a sequence around is to ensure that DividedSequence can identify duplicates
-//		efficiently. This can probably be done more efficiently through some means
-//		other than a basic set. Rather than storing the sequences in the set,
-//		hashes of each sequence can be stored. Or compressed versions can be stored.
-//		Or, potentially, there is another data structure that would be more
-//		efficient for the operation in general.
 func InversionCountSum(n int) int {
 	primes := PrimeConcat(n)
 	s := DividedSequence(primes, InversionCount)
@@ -129,7 +113,18 @@ func PrimeConcat(m int) string {
 	s := ""
 	for n := 1; n < m; n++ {
 		if isPrime(n) {
-			s = s + strconv.Itoa(n)
+			_ = n
+			// main questions:
+			//  how many primes are there below 10e8?
+			//		~5761455
+			//  how many bytes to store those primes as int32s?
+			//		~23MB
+			//	how many bytes to store those as a byte (char) array?
+			//		<64MB
+			// how long to calculate them?
+			//		~15 minutes?
+			// _ = strconv.Itoa(n)
+			// s = s + strconv.Itoa(n)
 		}
 	}
 	return s
